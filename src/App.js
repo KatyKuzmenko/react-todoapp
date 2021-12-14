@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Loader } from './components/Loader';
+import { Modal } from './components/Modal';
+import { NewTodoInput } from './components/NewTodoInput';
+import { TodoListFooter } from './components/TodoFooter';
+import { TodoList } from './components/TodoList';
+import './styles/style.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    todos: [{id: 1, title: 'dssdds', iscompleted: true}]
+  }
+
+  render() {
+    const { todos } = this.state
+    return (
+      <section class="todoapp">  
+        <NewTodoInput />
+        <TodoList todos={todos}/>
+        <TodoListFooter />
+        <Modal />
+        <Loader />
+      </section>
+    )
+  }
 }
 
 export default App;
