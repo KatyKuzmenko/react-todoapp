@@ -1,12 +1,15 @@
-import React from "react";
+import React from 'react'
 
 export class Loader extends React.Component {
   render() {
+    const { isFetching } = this.props
     return (
-      <div className="loader">
-        Loading
-        <span className="loader-span"></span>
-      </div>
+      isFetching && (
+        <div className='loader'>
+          Loading
+          <span className='loader-span'></span>
+        </div>
+      )
     )
   }
 }
