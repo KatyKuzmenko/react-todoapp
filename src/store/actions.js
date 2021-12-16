@@ -1,43 +1,43 @@
 import {
-  INIT_TODOS,
-  ADD_TODO,
-  TOGGLE_TODO,
-  TOGGLE_ALL,
-  DELETE_TODO,
-  EDIT_TITLE,
-  CLEAR_COMPLETED,
+  TODOS_INIT,
+  TODO_ADD,
+  TODO_DELETE,
+  TODO_TOGGLE,
+  TODOS_CLEAR_COMPLETED,
+  TODOS_TOGGLE_ALL,
+  TODO_EDIT
 } from './actionTypes'
 
 export const initState = (todos) => ({
-  type: INIT_TODOS,
+  type: TODOS_INIT,
   options: todos,
 })
 
 export const addTodo = (id, title) => ({
-  type: ADD_TODO,
+  type: TODO_ADD,
   options: { id, title },
 })
 
 export const toggleTodo = (id, iscompleted) => ({
-  type: TOGGLE_TODO,
+  type: TODO_TOGGLE,
   options: { id, iscompleted },
 })
 
 export const removeTodo = (id) => ({
-  type: DELETE_TODO,
+  type: TODO_DELETE,
   options: { id },
 })
 
 export const toggleAll = (iscompleted) => ({
-  type: TOGGLE_ALL,
+  type: TODOS_TOGGLE_ALL,
   options: { iscompleted },
 })
 
 export const editTitle = (id, title) => ({
-  type: EDIT_TITLE,
+  type: TODO_EDIT,
   options: { id, title },
 })
 
 export const clearTodos = () => ({
-  type: CLEAR_COMPLETED,
+  type: TODOS_CLEAR_COMPLETED,
 })

@@ -1,9 +1,17 @@
 import React from 'react'
+import { deleteCompletedTodos } from '../api/api'
+import store from '../store'
+import { clearTodos } from '../store/actions'
 
 export class TodoListFooter extends React.Component {
-  setFilter = () => {}
+  setFilter = (type) => {
+  }
 
-  clearCompleted = () => {}
+  clearCompleted = () => {
+    deleteCompletedTodos().then(() => {
+      store.dispatch(clearTodos())
+    })
+  }
 
   render() {
     const { todos, filterType } = this.props
@@ -19,7 +27,7 @@ export class TodoListFooter extends React.Component {
               <a
                 href='#/'
                 className={filterType === 'all' ? 'selected' : ''}
-                onClick={this.setFilter}
+                onClick={this.setFilter('all')}
               >
                 All
               </a>
@@ -29,7 +37,7 @@ export class TodoListFooter extends React.Component {
                 href='#/active'
                 data-filter='active'
                 className={filterType === 'active' ? 'selected' : ''}
-                onClick={this.setFilter}
+                onClick={this.setFilter('active')}
               >
                 Active
               </a>
@@ -39,7 +47,7 @@ export class TodoListFooter extends React.Component {
                 href='#/completed'
                 className={filterType === 'completed' ? 'selected' : ''}
                 data-filter='completed'
-                onClick={this.setFilter}
+                onClick={this.setFilter('completed')}
               >
                 Completed
               </a>

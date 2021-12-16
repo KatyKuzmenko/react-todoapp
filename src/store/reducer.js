@@ -1,19 +1,19 @@
 import {
-  INIT_TODOS,
-  ADD_TODO,
-  TOGGLE_TODO,
-  TOGGLE_ALL,
-  DELETE_TODO,
-  EDIT_TITLE,
-  CLEAR_COMPLETED,
+  TODOS_INIT,
+  TODO_ADD,
+  TODO_DELETE,
+  TODO_TOGGLE,
+  TODOS_CLEAR_COMPLETED,
+  TODOS_TOGGLE_ALL,
+  TODO_EDIT
 } from './actionTypes'
 
-export default function todosReducer(state = [], action) {
+export default function todosReducer(state, action) {
   switch (action.type) {
-    case INIT_TODOS:
+    case TODOS_INIT:
       return [...action.options]
 
-    case ADD_TODO:
+    case TODO_ADD:
       return [
         ...state,
         {
@@ -23,7 +23,7 @@ export default function todosReducer(state = [], action) {
         },
       ]
 
-    case TOGGLE_TODO:
+    case TODO_TOGGLE:
       return state.map((todo) => {
         if (todo.id === action.options.id) {
           return { ...todo, iscompleted: action.options.iscompleted }
@@ -32,10 +32,10 @@ export default function todosReducer(state = [], action) {
         return todo
       })
 
-    case DELETE_TODO:
+    case TODO_DELETE:
       return state.filter((todo) => action.options.id !== todo.id)
 
-    case EDIT_TITLE:
+    case TODO_EDIT:
       return state.map((todo) => {
         if (todo.id === action.options.id) {
           return { ...todo, title: action.options.title }
@@ -44,12 +44,12 @@ export default function todosReducer(state = [], action) {
         return todo
       })
 
-    case TOGGLE_ALL:
+    case TODOS_TOGGLE_ALL:
       return state.map((todo) => {
         return { ...todo, iscompleted: action.options.iscompleted }
       })
 
-    case CLEAR_COMPLETED:
+    case TODOS_CLEAR_COMPLETED:
       return state.filter((todo) => todo.iscompleted === false)
 
     default:

@@ -1,6 +1,17 @@
 import React from 'react'
+import { deleteTodo } from '../api/api'
+import store from '../store'
+import { removeTodo } from '../store/actions'
 
 export class Modal extends React.Component {
+  deleteTodoAndCloseModal = () => {
+    deleteTodo()
+      .then(() => {
+        store.dispatch(removeTodo())
+      })
+      .catch(err => console.warn(err))
+  }
+
   render() {
     return (
       <div className='modal'>

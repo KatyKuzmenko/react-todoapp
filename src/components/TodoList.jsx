@@ -5,6 +5,16 @@ import { toggleAll } from '../store/actions'
 import { Todo } from './Todo'
 
 export class TodoList extends React.Component {
+  state = {
+    filterType: 'all',
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.todos !== this.props.todos) {
+      this.forceUpdate()
+    }
+  }
+
   toggleAll = (event) => {
     store.dispatch(toggleAll(event.target.checked))
     toggleAllTodos(event.target.checked)
@@ -13,7 +23,9 @@ export class TodoList extends React.Component {
   }
 
   render() {
-    const { todos, filterType } = this.props
+    console.log('todolist')
+    const { todos } = this.props
+    const { filterType } = this.state
     const activeTodos = todos.filter((todo) => !todo.iscompleted)
     const completedTodos = todos.filter((todo) => todo.iscompleted)
 
@@ -25,7 +37,7 @@ export class TodoList extends React.Component {
 
     const visibleTodos = currentTodos[filterType]
     return (
-      <section className='main'>
+      <section className={todos.length > 0 ? 'main' : 'main invisible'}>
         <span className='toggle-all-container'>
           <input
             id='toggle-all'
@@ -37,7 +49,7 @@ export class TodoList extends React.Component {
           <label htmlFor='toggle-all'></label>
           <ul className='todo-list'>
             {visibleTodos.map((todo) => (
-              <Todo key={todo.id} todo={todo} />
+              <Todo todo={todo} key={todo.id} />
             ))}
           </ul>
         </span>

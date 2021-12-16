@@ -1,11 +1,11 @@
 import React from 'react'
-import { updateStatus } from '../api/api'
+import { updateStatus, updateTodo } from '../api/api'
 import store from '../store'
-import { toggleTodo } from '../store/actions'
+import { editTitle, toggleTodo } from '../store/actions'
 
 export class Todo extends React.Component {
   state = {
-    todoEditing: 971,
+    isEditing: false
   }
 
   toggleTodo = (event) => {
@@ -16,11 +16,33 @@ export class Todo extends React.Component {
       .catch((err) => console.warn(err))
   }
 
-  editTitle = (todoId) => {}
+  editTitle = () => {
+    this.setState({isEditing: true})
+  }
 
-  setTitleOnEnter = (event) => {}
+  setTitleOnEnter = (event) => {
+    if (!event.target.value.trim() || event.key !== 'Enter') {
+      return
+    }
+    updateTodo(+event.target.id, event.target.value)
+    .then(() => {
+      store.dispatch(editTitle(+event.target.id, event.target.value))
+    })
+    .catch((err) => console.warn(err))
+    this.setState({isEditing: false})
+  }
 
-  setTitleOnBlur = (event) => {}
+  setTitleOnBlur = (event) => {
+    if (!event.target.value.trim()) {
+      return
+    }
+    updateTodo(+event.target.id, event.target.value)
+    .then(() => {
+      store.dispatch(editTitle(+event.target.id, event.target.value))
+    })
+    .catch((err) => console.warn(err))
+    this.setState({isEditing: false})
+  }
 
   openModalWindow = () => {}
 
@@ -32,7 +54,7 @@ export class Todo extends React.Component {
         className={iscompleted ? 'todo-list__item completed' : 'todo-list__item'}
         data-todo-id={id}
       >
-        <div className={'view' + id}>
+        <div className={isEditing ? 'invisible view' + id : 'view' + id}>
           <input
             id={'todo-' + id}
             data-input-id={id}
@@ -42,7 +64,10 @@ export class Todo extends React.Component {
             onChange={this.toggleTodo}
           />
 
-          <label className='todo-title' data-label-id={id} onDoubleClick={this.editTitle}>
+          <label
+            className='todo-title'
+            data-label-id={id}
+            onDoubleClick={this.editTitle}>
             {title}
           </label>
 
@@ -53,7 +78,7 @@ export class Todo extends React.Component {
           className={isEditing ? 'edit-field edit' + id : 'edit-field invisible edit' + id}
           id={id}
           type='text'
-          value={title}
+          defaultValue={title}
           onKeyDown={this.setTitleOnEnter}
           onBlur={this.setTitleOnBlur}
         />
