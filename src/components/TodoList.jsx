@@ -1,43 +1,35 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { toggleAllTodos } from '../api/api'
-import store from '../store'
-import { toggleAll } from '../store/actions'
-import { Todo } from './Todo'
+import { TODOS_TOGGLE_ALL } from '../store/actionTypes'
+import Todo from './Todo'
 
-export class TodoList extends React.Component {
+class TodoList extends React.Component {
   state = {
     filterType: 'all',
   }
 
-  componentDidUpdate(prev) {
-    if (prev.todos !== this.props.todos) {
-      this.forceUpdate()
-    }
-  }
-
   toggleAll = (event) => {
-    store.dispatch(toggleAll(event.target.checked))
+    this.props.onToggleAll(event.target.checked)
     toggleAllTodos(event.target.checked)
       .then((todos) => todos)
       .catch((err) => console.warn(err))
   }
 
   render() {
-    console.log('todolist')
-    const { todos } = this.props
     const { filterType } = this.state
-    const activeTodos = todos.filter((todo) => !todo.iscompleted)
-    const completedTodos = todos.filter((todo) => todo.iscompleted)
+    const activeTodos = this.props.store.filter((todo) => !todo.iscompleted)
+    const completedTodos = this.props.store.filter((todo) => todo.iscompleted)
 
     const currentTodos = {
-      all: todos,
+      all: this.props.store,
       active: activeTodos,
       completed: completedTodos,
     }
 
     const visibleTodos = currentTodos[filterType]
     return (
-      <section className={todos.length > 0 ? 'main' : 'main invisible'}>
+      <section className={this.props.store.length > 0 ? 'main' : 'main invisible'}>
         <span className='toggle-all-container'>
           <input
             id='toggle-all'
@@ -57,3 +49,14 @@ export class TodoList extends React.Component {
     )
   }
 }
+
+export default connect(
+  state => ({
+    store: state
+  }),
+  dispatch => ({
+    onToggleAll: (iscompleted) => {
+      dispatch({type: TODOS_TOGGLE_ALL, options: {iscompleted}})
+    }
+  })
+)(TodoList)

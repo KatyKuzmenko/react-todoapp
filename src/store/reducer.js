@@ -1,3 +1,4 @@
+import { getTodos } from '../api/api'
 import {
   TODOS_INIT,
   TODO_ADD,
@@ -8,7 +9,7 @@ import {
   TODO_EDIT
 } from './actionTypes'
 
-export default function todosReducer(state, action) {
+export default function todosReducer(state = [], action) {
   switch (action.type) {
     case TODOS_INIT:
       return [...action.options]

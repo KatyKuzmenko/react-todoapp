@@ -1,18 +1,17 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { updateStatus, updateTodo } from '../api/api'
-import store from '../store'
-import { editTitle, toggleTodo } from '../store/actions'
+import { TODO_EDIT, TODO_TOGGLE } from '../store/actionTypes'
 
-export class Todo extends React.Component {
+class Todo extends React.Component {
   state = {
     isEditing: false
   }
 
   toggleTodo = (event) => {
+    this.props.onToggle(+event.target.dataset.inputId, event.target.checked)
     updateStatus(+event.target.dataset.inputId, event.target.checked)
-      .then(() => {
-        store.dispatch(toggleTodo(+event.target.dataset.inputId, event.target.checked))
-      })
+      .then((todos) => todos)
       .catch((err) => console.warn(err))
   }
 
@@ -24,10 +23,10 @@ export class Todo extends React.Component {
     if (!event.target.value.trim() || event.key !== 'Enter') {
       return
     }
+    this.props.onChangeTitle(+event.target.id, event.target.value)
+
     updateTodo(+event.target.id, event.target.value)
-    .then(() => {
-      store.dispatch(editTitle(+event.target.id, event.target.value))
-    })
+    .then((todos) => todos)
     .catch((err) => console.warn(err))
     this.setState({isEditing: false})
   }
@@ -36,10 +35,9 @@ export class Todo extends React.Component {
     if (!event.target.value.trim()) {
       return
     }
+    this.props.onChangeTitle(+event.target.id, event.target.value)
     updateTodo(+event.target.id, event.target.value)
-    .then(() => {
-      store.dispatch(editTitle(+event.target.id, event.target.value))
-    })
+    .then((todos) => todos)
     .catch((err) => console.warn(err))
     this.setState({isEditing: false})
   }
@@ -86,3 +84,17 @@ export class Todo extends React.Component {
     )
   }
 }
+
+export default connect(
+  state => ({
+    store: state
+  }),
+  dispatch => ({
+    onToggle: (id, iscompleted) => {
+      dispatch({type: TODO_TOGGLE, options: { id, iscompleted }})
+    },
+    onChangeTitle: (id, title) => {
+      dispatch({type: TODO_EDIT, options: { id, title }})
+    }
+  })
+)(Todo)

@@ -3,7 +3,7 @@ const BASE_URL = 'http://localhost:3001'
 const request = (url, options) => {
   return fetch(`${BASE_URL}${url}`, options).then((response) => {
     if (!response.ok) {
-      throw `${response.status} - ${response.statusText}`
+      return `${response.status} - ${response.statusText}`
     }
 
     return response.json()

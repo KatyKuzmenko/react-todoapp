@@ -1,25 +1,22 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { deleteCompletedTodos } from '../api/api'
-import store from '../store'
-import { clearTodos } from '../store/actions'
+import { TODOS_CLEAR_COMPLETED } from '../store/actionTypes'
 
-export class TodoListFooter extends React.Component {
-  setFilter = (type) => {
-  }
-
+class TodoListFooter extends React.Component {
   clearCompleted = () => {
     deleteCompletedTodos().then(() => {
-      store.dispatch(clearTodos())
+      this.props.onClear()
     })
   }
 
   render() {
-    const { todos, filterType } = this.props
-    const activeTodos = todos.filter((todo) => !todo.iscompleted)
-    const completedTodos = todos.filter((todo) => todo.iscompleted)
+    const filterType = 'all'
+    const activeTodos = this.props.store.filter((todo) => !todo.iscompleted)
+    const completedTodos = this.props.store.filter((todo) => todo.iscompleted)
 
     return (
-      todos.length > 0 && (
+      this.props.store.length > 0 && (
         <footer className='footer'>
           <span className='todo-count'>{activeTodos.length} items left</span>
           <ul className='filters'>
@@ -27,7 +24,6 @@ export class TodoListFooter extends React.Component {
               <a
                 href='#/'
                 className={filterType === 'all' ? 'selected' : ''}
-                onClick={this.setFilter('all')}
               >
                 All
               </a>
@@ -37,7 +33,6 @@ export class TodoListFooter extends React.Component {
                 href='#/active'
                 data-filter='active'
                 className={filterType === 'active' ? 'selected' : ''}
-                onClick={this.setFilter('active')}
               >
                 Active
               </a>
@@ -47,7 +42,6 @@ export class TodoListFooter extends React.Component {
                 href='#/completed'
                 className={filterType === 'completed' ? 'selected' : ''}
                 data-filter='completed'
-                onClick={this.setFilter('completed')}
               >
                 Completed
               </a>
@@ -63,3 +57,14 @@ export class TodoListFooter extends React.Component {
     )
   }
 }
+
+export default connect(
+  state => ({
+    store: state
+  }),
+  dispatch => ({
+    onClear: () => {
+      dispatch({type: TODOS_CLEAR_COMPLETED})
+    }
+  })
+)(TodoListFooter)
