@@ -1,4 +1,3 @@
-import { getTodos } from '../api/api'
 import {
   TODOS_INIT,
   TODO_ADD,
