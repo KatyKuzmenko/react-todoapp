@@ -1,82 +1,83 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { updateStatus, updateTodo } from '../api/api'
-import { TODO_EDIT, TODO_TOGGLE } from '../store/actionTypes'
+import { updateTodo } from '../api/api'
+import { TODO_EDIT } from '../store/actionTypes'
 
 class Todo extends React.Component {
   state = {
-    isEditing: false
+    isEditing: false,
   }
 
-  toggleTodo = (event) => {
-    this.props.onToggle(+event.target.dataset.inputId, event.target.checked)
-    updateStatus(+event.target.dataset.inputId, event.target.checked)
-      .then((todos) => todos)
+  toggleTodo = () => {
+    updateTodo({...this.props.todo, iscompleted: !this.props.todo.iscompleted})
+      .then((todo) => {
+        this.props.onToggle(todo)
+      })
       .catch((err) => console.warn(err))
   }
 
   editTitle = () => {
-    this.setState({isEditing: true})
+    this.setState({ isEditing: true })
   }
 
   setTitleOnEnter = (event) => {
     if (!event.target.value.trim() || event.key !== 'Enter') {
       return
     }
-    this.props.onChangeTitle(+event.target.id, event.target.value)
 
-    updateTodo(+event.target.id, event.target.value)
-    .then((todos) => todos)
-    .catch((err) => console.warn(err))
-    this.setState({isEditing: false})
+    updateTodo({...this.props.todo, title: event.target.value })
+      .then((todo) => {
+        this.props.onChangeTitle(todo)
+      })
+      .catch((err) => console.warn(err))
+    this.setState({ isEditing: false })
   }
 
   setTitleOnBlur = (event) => {
     if (!event.target.value.trim()) {
       return
     }
-    this.props.onChangeTitle(+event.target.id, event.target.value)
-    updateTodo(+event.target.id, event.target.value)
-    .then((todos) => todos)
-    .catch((err) => console.warn(err))
-    this.setState({isEditing: false})
+
+    updateTodo({...this.props.todo, title: event.target.value })
+      .then((todo) => {
+        this.props.onChangeTitle(todo)
+      })
+      .catch((err) => console.warn(err))
+    this.setState({ isEditing: false })
   }
 
   openModalWindow = () => {}
 
   render() {
-    const { id, title, iscompleted } = this.props.todo
+    const { todo } = this.props
     const { isEditing } = this.state
     return (
       <li
-        className={iscompleted ? 'todo-list__item completed' : 'todo-list__item'}
-        data-todo-id={id}
+        className={todo.iscompleted ? 'todo-list__item completed' : 'todo-list__item'}
+        data-todo-id={todo.id}
       >
-        <div className={isEditing ? 'invisible view' + id : 'view' + id}>
+        <div className={isEditing ? 'invisible view' + todo.id : 'view' + todo.id}>
           <input
-            id={'todo-' + id}
-            data-input-id={id}
+            id={'todo-' + todo.id}
+            data-input-id={todo.id}
             className='toggle'
             type='checkbox'
-            checked={iscompleted}
+            checked={todo.iscompleted}
             onChange={this.toggleTodo}
           />
 
-          <label
-            className='todo-title'
-            data-label-id={id}
-            onDoubleClick={this.editTitle}>
-            {title}
+          <label className='todo-title' data-label-id={todo.id} onDoubleClick={this.editTitle}>
+            {todo.title}
           </label>
 
-          <button className='destroy' data-destroy-id={id} onClick={this.openModalWindow}></button>
+          <button className='destroy' data-destroy-id={todo.id} onClick={this.openModalWindow}></button>
         </div>
 
         <input
-          className={isEditing ? 'edit-field edit' + id : 'edit-field invisible edit' + id}
-          id={id}
+          className={isEditing ? 'edit-field edit' + todo.id : 'edit-field invisible edit' + todo.id}
+          id={todo.id}
           type='text'
-          defaultValue={title}
+          defaultValue={todo.title}
           onKeyDown={this.setTitleOnEnter}
           onBlur={this.setTitleOnBlur}
         />
@@ -86,15 +87,15 @@ class Todo extends React.Component {
 }
 
 export default connect(
-  state => ({
-    store: state
+  (state) => ({
+    store: state,
   }),
-  dispatch => ({
-    onToggle: (id, iscompleted) => {
-      dispatch({type: TODO_TOGGLE, options: { id, iscompleted }})
+  (dispatch) => ({
+    onToggle: (todo) => {
+      dispatch({ type: TODO_EDIT, options: todo})
     },
-    onChangeTitle: (id, title) => {
-      dispatch({type: TODO_EDIT, options: { id, title }})
-    }
+    onChangeTitle: (todo) => {
+      dispatch({ type: TODO_EDIT, options: todo})
+    },
   })
 )(Todo)

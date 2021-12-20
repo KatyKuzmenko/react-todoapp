@@ -5,13 +5,16 @@ import { TODOS_CLEAR_COMPLETED } from '../store/actionTypes'
 
 class TodoListFooter extends React.Component {
   clearCompleted = () => {
-    deleteCompletedTodos().then(() => {
-      this.props.onClear()
-    })
+    deleteCompletedTodos()
+      .then(() => this.props.onClear())
+  }
+
+  hanleFilterChange = (filter) => {
+    this.props.onFiltering(filter)
   }
 
   render() {
-    const filterType = 'all'
+    const filterType = this.props.filterType
     const activeTodos = this.props.store.filter((todo) => !todo.iscompleted)
     const completedTodos = this.props.store.filter((todo) => todo.iscompleted)
 
@@ -24,6 +27,7 @@ class TodoListFooter extends React.Component {
               <a
                 href='#/'
                 className={filterType === 'all' ? 'selected' : ''}
+                onClick={() => this.hanleFilterChange('all')}
               >
                 All
               </a>
@@ -31,8 +35,8 @@ class TodoListFooter extends React.Component {
             <li>
               <a
                 href='#/active'
-                data-filter='active'
                 className={filterType === 'active' ? 'selected' : ''}
+                onClick={() => this.hanleFilterChange('active')}
               >
                 Active
               </a>
@@ -41,7 +45,8 @@ class TodoListFooter extends React.Component {
               <a
                 href='#/completed'
                 className={filterType === 'completed' ? 'selected' : ''}
-                data-filter='completed'
+                onClick={() => this.hanleFilterChange('completed')}
+
               >
                 Completed
               </a>
@@ -59,12 +64,12 @@ class TodoListFooter extends React.Component {
 }
 
 export default connect(
-  state => ({
-    store: state
+  (state) => ({
+    store: state,
   }),
-  dispatch => ({
+  (dispatch) => ({
     onClear: () => {
-      dispatch({type: TODOS_CLEAR_COMPLETED})
-    }
+      dispatch({ type: TODOS_CLEAR_COMPLETED })
+    },
   })
 )(TodoListFooter)

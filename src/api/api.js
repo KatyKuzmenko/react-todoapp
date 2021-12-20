@@ -37,17 +37,11 @@ const patch = (url, data) => {
 }
 
 export const createTodo = (title) => {
-  return post('/todos', {
-    title,
-  })
+  return post('/todos', { title })
 }
 
-export const updateTodo = (todoId, title) => {
-  return patch(`/todos/${todoId}`, { title })
-}
-
-export const updateStatus = (todoId, iscompleted) => {
-  return patch(`/todos/${todoId}`, { iscompleted })
+export const updateTodo = (todo) => {
+  return patch(`/todos/${todo.id}`, todo)
 }
 
 export const toggleAllTodos = (iscompleted) => {

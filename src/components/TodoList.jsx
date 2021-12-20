@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { toggleAllTodos } from '../api/api'
 import { TODOS_TOGGLE_ALL } from '../store/actionTypes'
 import Todo from './Todo'
+import TodoListFooter from './TodoFooter'
 
 class TodoList extends React.Component {
   state = {
@@ -10,10 +11,15 @@ class TodoList extends React.Component {
   }
 
   toggleAll = (event) => {
-    this.props.onToggleAll(event.target.checked)
     toggleAllTodos(event.target.checked)
-      .then((todos) => todos)
+      .then((todos) => {
+        this.props.onToggleAll(todos)
+      })
       .catch((err) => console.warn(err))
+  }
+
+  onFiltering = (filter) => {
+    this.setState({filterType: filter})
   }
 
   render() {
@@ -29,34 +35,37 @@ class TodoList extends React.Component {
 
     const visibleTodos = currentTodos[filterType]
     return (
-      <section className={this.props.store.length > 0 ? 'main' : 'main invisible'}>
-        <span className='toggle-all-container'>
-          <input
-            id='toggle-all'
-            className='toggle-all'
-            type='checkbox'
-            checked={activeTodos.length === 0}
-            onChange={this.toggleAll}
-          />
-          <label htmlFor='toggle-all'></label>
-          <ul className='todo-list'>
-            {visibleTodos.map((todo) => (
-              <Todo todo={todo} key={todo.id} />
-            ))}
-          </ul>
-        </span>
-      </section>
+      <>
+        <section className={this.props.store.length > 0 ? 'main' : 'main invisible'}>
+          <span className='toggle-all-container'>
+            <input
+              id='toggle-all'
+              className='toggle-all'
+              type='checkbox'
+              checked={activeTodos.length === 0}
+              onChange={this.toggleAll}
+            />
+            <label htmlFor='toggle-all'></label>
+            <ul className='todo-list'>
+              {visibleTodos.map((todo) => (
+                <Todo todo={todo} key={todo.id} />
+              ))}
+            </ul>
+          </span>
+        </section>
+        <TodoListFooter filterType={filterType} onFiltering={this.onFiltering} />
+      </>
     )
   }
 }
 
 export default connect(
-  state => ({
-    store: state
+  (state) => ({
+    store: state,
   }),
-  dispatch => ({
+  (dispatch) => ({
     onToggleAll: (iscompleted) => {
-      dispatch({type: TODOS_TOGGLE_ALL, options: {iscompleted}})
-    }
+      dispatch({ type: TODOS_TOGGLE_ALL, options: { iscompleted } })
+    },
   })
 )(TodoList)

@@ -10,8 +10,8 @@ class NewTodoInput extends React.Component {
     }
 
     createTodo(event.target.value)
-      .then((id) => {
-        this.props.onAdding(id, event.target.value)
+      .then((todo) => {
+        this.props.onAdding(todo)
         event.target.value = ''
       })
       .catch((err) => console.warn(err))
@@ -21,23 +21,19 @@ class NewTodoInput extends React.Component {
     return (
       <header className='header'>
         <h1>todos</h1>
-        <input
-          className='new-todo'
-          placeholder='What needs to be done?'
-          onKeyDown={this.addTodo} 
-        />
+        <input className='new-todo' placeholder='What needs to be done?' onKeyDown={this.addTodo} />
       </header>
     )
   }
 }
 
 export default connect(
-  state => ({
-    store: state
+  (state) => ({
+    store: state,
   }),
-  dispatch => ({
-    onAdding: (id, title) => {
-      dispatch({type: TODO_ADD, options: { id, title }})
-    }
+  (dispatch) => ({
+    onAdding: (todo) => {
+      dispatch({ type: TODO_ADD, options: todo })
+    },
   })
 )(NewTodoInput)
