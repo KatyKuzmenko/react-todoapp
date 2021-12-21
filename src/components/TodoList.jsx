@@ -80,9 +80,6 @@ class TodoList extends React.Component {
                 <Todo
                   todo={todo}
                   key={todo.id}
-                  isLoading={isLoading}
-                  isModalOpened={isModalOpened}
-                  idToRemove={idToRemove}
                   onLoading={this.onLoading}
                   handleModal={this.handleModal}
                   setIdToRemove={this.setIdToRemove}
@@ -94,11 +91,16 @@ class TodoList extends React.Component {
         <TodoListFooter
           filterType={filterType}
           onFiltering={this.onFiltering}
-          isLoading={isLoading}
           onLoading={this.onLoading}
         />
         {isLoading && <Loader />}
-        {isModalOpened && <Modal isModalOpened={isModalOpened} handleModal={this.handleModal} idToRemove={idToRemove} />}
+        {isModalOpened && (
+          <Modal
+            onLoading={this.onLoading}
+            handleModal={this.handleModal}
+            idToRemove={idToRemove}
+          />
+        )}
       </>
     )
   }

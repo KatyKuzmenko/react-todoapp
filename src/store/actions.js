@@ -5,7 +5,7 @@ import {
   TODO_TOGGLE,
   TODOS_CLEAR_COMPLETED,
   TODOS_TOGGLE_ALL,
-  TODO_EDIT
+  TODO_EDIT,
 } from './actionTypes'
 
 export const initState = (todos) => ({

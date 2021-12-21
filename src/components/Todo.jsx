@@ -10,7 +10,7 @@ class Todo extends React.Component {
 
   toggleTodo = () => {
     this.props.onLoading()
-    updateTodo({...this.props.todo, iscompleted: !this.props.todo.iscompleted})
+    updateTodo({ ...this.props.todo, iscompleted: !this.props.todo.iscompleted })
       .then((todo) => {
         this.props.onToggle(todo)
         this.props.onLoading()
@@ -27,7 +27,7 @@ class Todo extends React.Component {
       return
     }
     this.props.onLoading()
-    updateTodo({...this.props.todo, title: event.target.value })
+    updateTodo({ ...this.props.todo, title: event.target.value })
       .then((todo) => {
         this.props.onChangeTitle(todo)
         this.props.onLoading()
@@ -41,7 +41,7 @@ class Todo extends React.Component {
       return
     }
     this.props.onLoading()
-    updateTodo({...this.props.todo, title: event.target.value })
+    updateTodo({ ...this.props.todo, title: event.target.value })
       .then((todo) => {
         this.props.onChangeTitle(todo)
         this.props.onLoading()
@@ -51,7 +51,6 @@ class Todo extends React.Component {
   }
 
   openModalWindow = (id) => {
-    console.log(id)
     this.props.setIdToRemove(id)
     this.props.handleModal()
   }
@@ -78,11 +77,17 @@ class Todo extends React.Component {
             {todo.title}
           </label>
 
-          <button className='destroy' data-destroy-id={todo.id} onClick={() => this.openModalWindow(todo.id)}></button>
+          <button
+            className='destroy'
+            data-destroy-id={todo.id}
+            onClick={() => this.openModalWindow(todo.id)}
+          ></button>
         </div>
 
         <input
-          className={isEditing ? 'edit-field edit' + todo.id : 'edit-field invisible edit' + todo.id}
+          className={
+            isEditing ? 'edit-field edit' + todo.id : 'edit-field invisible edit' + todo.id
+          }
           id={todo.id}
           type='text'
           defaultValue={todo.title}
@@ -100,10 +105,10 @@ export default connect(
   }),
   (dispatch) => ({
     onToggle: (todo) => {
-      dispatch({ type: TODO_EDIT, options: todo})
+      dispatch({ type: TODO_EDIT, options: todo })
     },
     onChangeTitle: (todo) => {
-      dispatch({ type: TODO_EDIT, options: todo})
+      dispatch({ type: TODO_EDIT, options: todo })
     },
   })
 )(Todo)

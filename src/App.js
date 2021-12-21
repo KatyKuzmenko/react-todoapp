@@ -1,7 +1,6 @@
 import React from 'react'
 import './styles/style.css'
 
-// import Modal from './components/Modal'
 import NewTodoInput from './components/NewTodoInput'
 import TodoList from './components/TodoList'
 

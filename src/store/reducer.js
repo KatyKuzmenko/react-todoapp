@@ -4,7 +4,7 @@ import {
   TODO_DELETE,
   TODOS_CLEAR_COMPLETED,
   TODOS_TOGGLE_ALL,
-  TODO_EDIT
+  TODO_EDIT,
 } from './actionTypes'
 
 export default function todosReducer(state = [], action) {
@@ -13,19 +13,7 @@ export default function todosReducer(state = [], action) {
       return [...action.options]
 
     case TODO_ADD:
-      return [
-        ...state,
-        action.options,
-      ]
-
-    // case TODO_TOGGLE:
-    //   return state.map((todo) => {
-    //     if (todo.id === action.options.id) {
-    //       return { ...todo, iscompleted: !todo.iscompleted }
-    //     }
-
-    //     return todo
-    //   })
+      return [...state, action.options]
 
     case TODO_DELETE:
       return state.filter((todo) => action.options.id !== todo.id)
