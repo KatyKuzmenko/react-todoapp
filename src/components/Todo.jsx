@@ -60,26 +60,22 @@ class Todo extends React.Component {
     return (
       <li
         className={todo.iscompleted ? 'todo-list__item completed' : 'todo-list__item'}
-        data-todo-id={todo.id}
       >
         {!isEditing && (
           <div className='view'>
             <input
-              id={'todo-' + todo.id}
-              data-input-id={todo.id}
               className='toggle'
               type='checkbox'
               checked={todo.iscompleted}
               onChange={this.toggleTodo}
             />
 
-            <label className='todo-title' data-label-id={todo.id} onDoubleClick={this.editTitle}>
+            <label className='todo-title' onDoubleClick={this.editTitle}>
               {todo.title}
             </label>
 
             <button
               className='destroy'
-              data-destroy-id={todo.id}
               onClick={() => this.openModalWindow(todo.id)}
             ></button>
           </div>
@@ -87,7 +83,6 @@ class Todo extends React.Component {
         {isEditing && (
           <input
             className='edit-field'
-            id={todo.id}
             type='text'
             defaultValue={todo.title}
             onKeyDown={this.setTitleOnEnter}
