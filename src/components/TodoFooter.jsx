@@ -5,8 +5,12 @@ import { TODOS_CLEAR_COMPLETED } from '../store/actionTypes'
 
 class TodoListFooter extends React.Component {
   clearCompleted = () => {
+    this.props.onLoading()
     deleteCompletedTodos()
-      .then(() => this.props.onClear())
+      .then(() => {
+        this.props.onClear()
+        this.props.onLoading()
+      })
   }
 
   hanleFilterChange = (filter) => {

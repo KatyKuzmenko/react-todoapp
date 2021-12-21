@@ -13,6 +13,7 @@ class NewTodoInput extends React.Component {
       .then((todo) => {
         this.props.onAdding(todo)
         event.target.value = ''
+        this.setState({ isLoading: false })
       })
       .catch((err) => console.warn(err))
   }

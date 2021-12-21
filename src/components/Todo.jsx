@@ -9,9 +9,11 @@ class Todo extends React.Component {
   }
 
   toggleTodo = () => {
+    this.props.onLoading()
     updateTodo({...this.props.todo, iscompleted: !this.props.todo.iscompleted})
       .then((todo) => {
         this.props.onToggle(todo)
+        this.props.onLoading()
       })
       .catch((err) => console.warn(err))
   }
@@ -24,10 +26,11 @@ class Todo extends React.Component {
     if (!event.target.value.trim() || event.key !== 'Enter') {
       return
     }
-
+    this.props.onLoading()
     updateTodo({...this.props.todo, title: event.target.value })
       .then((todo) => {
         this.props.onChangeTitle(todo)
+        this.props.onLoading()
       })
       .catch((err) => console.warn(err))
     this.setState({ isEditing: false })
@@ -37,10 +40,11 @@ class Todo extends React.Component {
     if (!event.target.value.trim()) {
       return
     }
-
+    this.props.onLoading()
     updateTodo({...this.props.todo, title: event.target.value })
       .then((todo) => {
         this.props.onChangeTitle(todo)
+        this.props.onLoading()
       })
       .catch((err) => console.warn(err))
     this.setState({ isEditing: false })
