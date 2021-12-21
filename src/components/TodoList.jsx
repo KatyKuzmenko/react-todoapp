@@ -5,11 +5,14 @@ import { TODOS_INIT, TODOS_TOGGLE_ALL } from '../store/actionTypes'
 import { Loader } from './Loader'
 import Todo from './Todo'
 import TodoListFooter from './TodoFooter'
+import Modal from './Modal'
 
 class TodoList extends React.Component {
   state = {
     filterType: 'all',
     isLoading: false,
+    isModalOpened: false,
+    idToRemove: null,
   }
 
   componentDidMount() {
@@ -40,8 +43,16 @@ class TodoList extends React.Component {
     this.setState({ isLoading: !this.state.isLoading })
   }
 
+  handleModal = () => {
+    this.setState({ isModalOpened: !this.state.isModalOpened })
+  }
+
+  setIdToRemove = (todoId) => {
+    this.setState({ idToRemove: todoId })
+  }
+
   render() {
-    const { filterType, isLoading } = this.state
+    const { filterType, isLoading, isModalOpened, idToRemove } = this.state
     const activeTodos = this.props.store.filter((todo) => !todo.iscompleted)
     const completedTodos = this.props.store.filter((todo) => todo.iscompleted)
 
@@ -66,7 +77,16 @@ class TodoList extends React.Component {
             <label htmlFor='toggle-all'></label>
             <ul className='todo-list'>
               {visibleTodos.map((todo) => (
-                <Todo todo={todo} key={todo.id} isLoading={isLoading} onLoading={this.onLoading} />
+                <Todo
+                  todo={todo}
+                  key={todo.id}
+                  isLoading={isLoading}
+                  isModalOpened={isModalOpened}
+                  idToRemove={idToRemove}
+                  onLoading={this.onLoading}
+                  handleModal={this.handleModal}
+                  setIdToRemove={this.setIdToRemove}
+                />
               ))}
             </ul>
           </span>
@@ -78,6 +98,7 @@ class TodoList extends React.Component {
           onLoading={this.onLoading}
         />
         {isLoading && <Loader />}
+        {isModalOpened && <Modal isModalOpened={isModalOpened} handleModal={this.handleModal} idToRemove={idToRemove} />}
       </>
     )
   }

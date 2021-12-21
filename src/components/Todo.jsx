@@ -50,7 +50,11 @@ class Todo extends React.Component {
     this.setState({ isEditing: false })
   }
 
-  openModalWindow = () => {}
+  openModalWindow = (id) => {
+    console.log(id)
+    this.props.setIdToRemove(id)
+    this.props.handleModal()
+  }
 
   render() {
     const { todo } = this.props
@@ -74,7 +78,7 @@ class Todo extends React.Component {
             {todo.title}
           </label>
 
-          <button className='destroy' data-destroy-id={todo.id} onClick={this.openModalWindow}></button>
+          <button className='destroy' data-destroy-id={todo.id} onClick={() => this.openModalWindow(todo.id)}></button>
         </div>
 
         <input
