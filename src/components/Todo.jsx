@@ -7,6 +7,17 @@ class Todo extends React.Component {
   state = {
     isEditing: false,
   }
+  
+  setNewTitle = (title) => {
+    this.props.onLoading()
+    updateTodo({ ...this.props.todo, title })
+      .then((todo) => {
+        this.props.onChangeTitle(todo)
+        this.props.onLoading()
+      })
+      .catch((err) => console.warn(err))
+    this.setState({ isEditing: false })
+  }
 
   toggleTodo = () => {
     this.props.onLoading()
@@ -26,28 +37,16 @@ class Todo extends React.Component {
     if (!event.target.value.trim() || event.key !== 'Enter') {
       return
     }
-    this.props.onLoading()
-    updateTodo({ ...this.props.todo, title: event.target.value })
-      .then((todo) => {
-        this.props.onChangeTitle(todo)
-        this.props.onLoading()
-      })
-      .catch((err) => console.warn(err))
-    this.setState({ isEditing: false })
+  
+    this.setNewTitle(event.target.value.trim())
   }
 
   setTitleOnBlur = (event) => {
     if (!event.target.value.trim()) {
       return
     }
-    this.props.onLoading()
-    updateTodo({ ...this.props.todo, title: event.target.value })
-      .then((todo) => {
-        this.props.onChangeTitle(todo)
-        this.props.onLoading()
-      })
-      .catch((err) => console.warn(err))
-    this.setState({ isEditing: false })
+  
+    this.setNewTitle(event.target.value.trim())
   }
 
   openModalWindow = (id) => {
@@ -63,37 +62,40 @@ class Todo extends React.Component {
         className={todo.iscompleted ? 'todo-list__item completed' : 'todo-list__item'}
         data-todo-id={todo.id}
       >
-        <div className={isEditing ? 'invisible view' + todo.id : 'view' + todo.id}>
+        {!isEditing && (
+          <div className='view'>
+            <input
+              id={'todo-' + todo.id}
+              data-input-id={todo.id}
+              className='toggle'
+              type='checkbox'
+              checked={todo.iscompleted}
+              onChange={this.toggleTodo}
+            />
+
+            <label className='todo-title' data-label-id={todo.id} onDoubleClick={this.editTitle}>
+              {todo.title}
+            </label>
+
+            <button
+              className='destroy'
+              data-destroy-id={todo.id}
+              onClick={() => this.openModalWindow(todo.id)}
+            ></button>
+          </div>
+        )}
+        {isEditing && (
           <input
-            id={'todo-' + todo.id}
-            data-input-id={todo.id}
-            className='toggle'
-            type='checkbox'
-            checked={todo.iscompleted}
-            onChange={this.toggleTodo}
+            className='edit-field'
+            id={todo.id}
+            type='text'
+            defaultValue={todo.title}
+            onKeyDown={this.setTitleOnEnter}
+            onBlur={this.setTitleOnBlur}
+            autoFocus
           />
-
-          <label className='todo-title' data-label-id={todo.id} onDoubleClick={this.editTitle}>
-            {todo.title}
-          </label>
-
-          <button
-            className='destroy'
-            data-destroy-id={todo.id}
-            onClick={() => this.openModalWindow(todo.id)}
-          ></button>
-        </div>
-
-        <input
-          className={
-            isEditing ? 'edit-field edit' + todo.id : 'edit-field invisible edit' + todo.id
-          }
-          id={todo.id}
-          type='text'
-          defaultValue={todo.title}
-          onKeyDown={this.setTitleOnEnter}
-          onBlur={this.setTitleOnBlur}
-        />
+        )}
+        
       </li>
     )
   }
